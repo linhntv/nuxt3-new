@@ -27,7 +27,7 @@
           Add User</va-button
         >
         <va-modal v-model="showModalAdd" hide-default-actions>
-          <div class="flex flex-col items-start gap-2">
+          <div>
             <h3 class="title-modal">Add user</h3>
             <div class="input-modal">
               <va-input
@@ -51,7 +51,7 @@
             </div>
           </div>
 
-          <div class="flex justify-end mt-2 gap-2 button-modal">
+          <div class="button-modal">
             <va-button @click="handleCloseModal()"> Cancel </va-button>
             <va-button @click="addUserStore()"> Save </va-button>
           </div>
@@ -129,7 +129,7 @@
           </div>
         </div>
 
-        <div class="flex justify-end mt-2 gap-2 button-modal">
+        <div class="button-modal">
           <va-button @click="handleCloseModal()"> Cancel </va-button>
           <va-button @click="editUserStore()"> Save </va-button>
         </div>
@@ -137,11 +137,11 @@
 
       <!-- modal delete-->
       <va-modal v-model="showModalDelete" hide-default-actions>
-        <h3 class="title-modal">Delete modal</h3>
+        <h3 class="title-modal">Comfirm</h3>
         <p class="description-modal">
           Are you sure you want to delete? If deleted, the data cannot be recovered.
         </p>
-        <div class="flex justify-end mt-2 gap-2 button-modal">
+        <div class="button-modal">
           <va-button @click="handleCloseModal()"> Cancel </va-button>
           <va-button color="danger" @click="deleteUserStore()"> Delete </va-button>
         </div>
@@ -200,9 +200,10 @@ const addUserStore = () => {
   handleCloseModal()
 }
 ///function delete User
-const deleteUser = (rowIndex) => {
-  items.data.splice(rowIndex, 1)
-}
+
+// const deleteUser = (rowIndex) => {
+//   items.data.splice(rowIndex, 1)
+// }
 const handleDeleteUser = (rowIndex) => {
   showModalDelete.value = true
   item.data = { ...items.data[rowIndex], id: rowIndex }
