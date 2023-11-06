@@ -7,20 +7,19 @@ export const management = defineStore('personalData', {
   }),
   getters: {
     isLoading: (state) => {
-      return state.loading;
+      return state.loading
     }
   },
 
   actions: {
     async getUser() {
       try {
-        this.loading= true;
+        this.loading = true
         this.userData = await useApi.requestForm.get('/beers')
-
       } catch (error) {
         return error
-      }finally {
-        this.loading= false;
+      } finally {
+        this.loading = false
       }
     },
     addUser(item) {
@@ -35,11 +34,13 @@ export const management = defineStore('personalData', {
       this.userData.data[currentId] = item
     },
     filterUser(name) {
-      this.userData.data = this.userData.data.filter(item => {
-       if(item.name?.startsWith(name)) {
-        return item
-       };
-      });
+      this.userData.data = this.userData.data.filter((item) => {
+        if (item.name?.includes(name)) {
+          return item
+        } else if (item.name?.includes('')) {
+          this.getUser()
+        }
+      })
     }
   }
 })
