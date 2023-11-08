@@ -1,0 +1,11 @@
+.table {
+  &-content {
+    .button-edit {
+      margin-right: 8px;
+    }
+  }
+  &-content-button {
+    display: flex;
+    gap: 8px;
+  }
+}

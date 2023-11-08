@@ -1,36 +1,38 @@
 <template>
-  <Header />
-  <!-- title -->
-  <div class="title-page">
+  <HeaderPages />
+  <div class="management-title">
     <h1>Management page</h1>
   </div>
-  <ClientOnly>
-    <div class="form-add">
-      <!--input filter-->
-      <div>
-        <va-input
-          v-model="filtername"
-          :background="'#fff'"
-          placeholder="Name...."
-          @input="filterUsername"
-        />
 
-        <!-- button add -->
-      </div>
-      <div>
-        <va-button preset="Plain-opacity" :icon="'add'" @click="handleShowModal"> Add User</va-button>
-      </div>
-    </div>
-    <!-- ----------------------table---------------------- -->
-    <Table
-      :columns="columns"
-      :items="items.data"
-      :isLoading="managementData?.isLoading"
-      @handle-delete="hanleDelete"
-      @handle-edit="hanleEdit"
+  <div class="management-form">
+    <va-input
+      v-model="filtername"
+      background="#fff"
+      placeholder="Name...."
+      @input="filterUsername"
     />
-    <BaseModal @handle-click="addUser" v-if="isShowModal"/>
-  </ClientOnly>
+    <va-button preset="Plain-opacity" icon="add" @click="handleShowModalAdd"> Add User </va-button>
+  </div>
+  
+  <TableUser
+    :columns="columns"
+    :items="items.data"
+    :isLoading="managementData?.isLoading"
+    @handleDelete="handleShowModalDelete"
+    @handleEdit="handleShowModalEdit"
+  />
+
+  <BaseModal v-if="isShowModalAdd" @handleClick="addUser"  @handleCancelModal="handleCloseModal"/>
+
+  <BaseModal
+    v-if="isShowModalEdit"
+    :itemEdit="itemEdit.data"
+    title="Edit user"
+    @handleClick="editUser"
+    @handleCancelModal="handleCloseModal"
+  />
+
+  <BaseComfirm v-if="isShowModalDelete" @deleteUser="deleteUser" />
 </template>
 
 <script setup>
@@ -44,7 +46,11 @@ const columns = reactive([
 ])
 const items = reactive({ data: [] })
 const filtername = ref('')
-const isShowModal = ref(false)
+const isShowModalAdd = ref(false)
+const isShowModalEdit = ref(false)
+const isShowModalDelete = ref(false)
+const itemEdit = reactive({ data: {} })
+const itemDelete = reactive({ data: {} })
 const managementData = management()
 
 onMounted(async () => {
@@ -55,77 +61,57 @@ onMounted(async () => {
   }))
 })
 
-//fuction delete
-const hanleDelete = (rowIndex) => {
-  const item = {
+const handleShowModalAdd = () => {
+  isShowModalAdd.value = true
+}
+
+const handleShowModalEdit = (rowIndex) => {
+  isShowModalEdit.value = true
+  itemEdit.data = items.data[rowIndex]
+}
+
+const handleShowModalDelete = (rowIndex) => {
+  isShowModalDelete.value = true
+  itemDelete.data = {
     ...items.data[rowIndex],
     id: rowIndex
   }
-  managementData.deleteUser(item)
+}
+
+const handleCloseModal = () => {
+  isShowModalEdit.value = false
+  isShowModalAdd.value = false
+  isShowModalDelete.value = false
+}
+
+const addUser = (item) => {
+  if (item.name && item.category && item.slug) {
+    managementData.addUser(item)
+    items.data = managementData?.userData?.data
+  } else {
+    alert('Vui lòng nhập...')
+  }
+  handleCloseModal()
+}
+
+const editUser = (item) => {
+  managementData.editUser(item)
   items.data = managementData?.userData?.data
+  handleCloseModal()
 }
-//fuction edit
-const hanleEdit = (rowIndex) => {
-  console.log("🚀 ~ file: Management.vue:69 ~ hanleEdit ~ rowIndex:", rowIndex)
-  handleShowModal()
+
+const deleteUser = () => {
+  managementData.deleteUser(itemDelete)
+  items.data = managementData?.userData?.data
+  handleCloseModal()
 }
-// fuction filter
+
 const filterUsername = () => {
-  console.log(filtername.value)
   managementData.filterUser(filtername.value)
   items.data = managementData?.userData?.data
-}
-//fuction show modal add
-const handleShowModal = () => {
-  isShowModal.value = true
-}
-//fuction add user
-const addUser = (item) => {
-if(item.name && item.category && item.slug){
-  managementData.addUser(item)
-  items.data = managementData?.userData?.data
-  
-}else{
-  alert("Vui lòng nhập")
-}
-isShowModal.value = false
 }
 </script>
 
 <style lang="scss" scoped>
-.title-page {
-  margin: 40px auto;
-  text-align: center;
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.form-add {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px;
-  border: 1px solid #ccc;
-  background-color: rgb(125, 174, 238);
-}
-.form-table {
-  padding: 0 8px;
-}
-.table {
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
-.from-number-item {
-  width: 200px;
-  float: left;
-  background-color: rgb(125, 174, 238) !important;
-}
-
-.button-modal {
-  margin-top: 18px;
-  display: flex;
-  gap: 8px;
-  justify-content: end;
-}
-.description-modal {
-  margin-top: 18px;
-}
+@import '@/assets/scss/pages/management.scss';
 </style>

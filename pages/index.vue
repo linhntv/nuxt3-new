@@ -1,5 +1,5 @@
 <template>
-  <Header/>
+  <HeaderPages/>
   <ClientOnly>
     <va-data-table class="table-crud" v-bind:items="items" v-bind:columns="columns" striped>
       <template #headerAppend>

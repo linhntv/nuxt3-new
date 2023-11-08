@@ -1,6 +1,5 @@
 <template>
-  <va-modal v-model="showModalValue" title="edit" @ok="handleclick" okText="Submit">
-    <div>
+  <va-modal v-model="showModalValue" :title="title" @ok="handleclick" okText="Submit" @cancel="handleCancelModal">
       <div class="input-modal">
         <va-input v-model="item.data.name" placeholder="Name..." label="Name:" preset="bordered" />
         <va-input
@@ -11,32 +10,33 @@
         />
         <va-input v-model="item.data.slug" placeholder="Slug..." label="Slug:" preset="bordered" />
       </div>
-    </div>
   </va-modal>
 </template>
 
 <script setup>
-const props = defineProps({})
-const emits = defineEmits(['handle-click'])
-const item = reactive({ data: {} })
+const props = defineProps({
+  title: {
+    type: String,
+    default: 'Add user'
+  },
+
+  itemEdit: {
+    type: Object,
+    default: () => {}
+  }
+})
+const emits = defineEmits(['handleClick','handleCancelModal'])
+const item = reactive({ data: props.itemEdit ? props.itemEdit : {} })
 const showModalValue = ref(true)
+
 const handleclick = () => {
-  emits('handle-click', item.data)
+  emits('handleClick', item.data)
+}
+const handleCancelModal = () => {
+  emits('handleCancelModal')
 }
 </script>
 
 <style lang="scss" scoped>
-.title-modal {
-  font-size: 18px;
-  font-weight: 700;
-  color: rgb(66, 66, 224);
-}
-.input-modal {
-  display: block;
-  width: 400px !important;
-  .va-input-wrapper--bordered {
-    width: 100%;
-    margin-top: 8px;
-  }
-}
+@import "@/assets/scss/components/base/base-modal.scss";
 </style>

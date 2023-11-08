@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
 import { useApi } from '@/helpers/useFetch'
+
 export const management = defineStore('personalData', {
   state: () => ({
     userData: null,
     loading: false
   }),
+  
   getters: {
     isLoading: (state) => {
       return state.loading
@@ -22,17 +24,21 @@ export const management = defineStore('personalData', {
         this.loading = false
       }
     },
+
     addUser(item) {
       this.userData.data.push(item)
     },
-    deleteUser(item) {
-      const currentId = item.id
+
+    deleteUser(itemDelete) {
+      const currentId = itemDelete.data.id
       this.userData.data.splice(currentId, 1)
     },
+    
     editUser(item) {
       const currentId = item.id
       this.userData.data[currentId] = item
     },
+
     filterUser(name) {
       this.userData.data = this.userData.data.filter((item) => {
         if (item.name?.includes(name)) {

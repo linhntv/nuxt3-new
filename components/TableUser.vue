@@ -1,5 +1,5 @@
 <template>
-  <div class="form-table">
+  <div class="table">
     <va-data-table
       :items="items"
       :columns="columns"
@@ -11,22 +11,20 @@
         '--va-data-table-tfoot-background': 'var(--va-background-element)',
         '--va-data-table-thead-color': '#2C82E0'
       }"
-      class="table"
+      class="table-content"
       sticky-header
       striped
     >
       <template #cell(actions)="{ rowIndex }">
-        <div class="flex-button">
-          <!-- form edit -->
-
+        <div class="table-content-button">
           <va-button
             preset="Plain-opacity"
             :icon="'edit'"
-            class="margin-right"
+            class="button-edit"
             @click="handleEdit(rowIndex)"
           >
-            Edit user</va-button
-          >
+            Edit user
+          </va-button>
 
           <va-button
             preset="Plain-opacity"
@@ -39,6 +37,7 @@
         </div>
       </template>
     </va-data-table>
+
     <va-alert color="info">
       Number items:
       <va-chip>{{ items.length }}</va-chip>
@@ -61,21 +60,17 @@ const props = defineProps({
     default: false
   }
 })
-const emits = defineEmits(['handle-delete', 'handle-edit'])
+const emits = defineEmits(['handleDelete', 'handleEdit'])
+
 const handleDeleteUser = (rowIndex) => {
-  emits('handle-delete', rowIndex)
+  emits('handleDelete', rowIndex)
 }
+
 const handleEdit = (rowIndex) => {
-  emits('handle-edit', rowIndex)
+  emits('handleEdit', rowIndex)
 }
 </script>
 
 <style lang="scss" scoped>
-.flex-button {
-  display: flex;
-  gap: 8px;
-  .margin-right {
-    margin-right: 8px;
-  }
-}
+@import "@/assets/scss/components/table-user.scss"
 </style>
